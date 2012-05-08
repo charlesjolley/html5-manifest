@@ -2,8 +2,7 @@
   "name": "html5-manifest",
   "version": "1.0.0",
   "dependencies": {
-    "coffee-script": "~1.3",
-    "convoy": "0.3.x"
+    "coffee-script": "~1.3"
   }, 
 
   "main": "./index.js"
