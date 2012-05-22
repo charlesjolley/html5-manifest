@@ -29,7 +29,7 @@ class AppManifest extends EventEmitter
 
     # TODO: rethink these rules a bit. maybe just throw exception if you don't
     # pass a RegExp or array of RegExps?
-    @include ||= []
+    @include ||= [/.*/] # match all URLs
     @include = if @include instanceof Array then @include else [@include]
 
   # Detects that the given path is handled by this packager.
@@ -53,14 +53,14 @@ class AppManifest extends EventEmitter
           ((next) =>
             @pipeline.findPaths (err, paths) =>
               return next(err) if err
-              urlRoot = @pipeline.urlRoot or '/'
+              urlRoot = @pipeline.urlRoot
               paths = paths.filter (path) => 
                 (path != @path) and
                 @include.some (regex) -> regex.exec path
-
               # make sure all assets get built to activate watchers.
-              paths.forEach((path) => @pipeline.build path) if @watch 
-              paths = paths.map (path) => PATH.join urlRoot, path
+              paths.forEach((path) => @pipeline.build path) if @watch
+              if urlRoot
+                paths = paths.map (path) => PATH.join urlRoot, path
               next err, paths
           ),
 
